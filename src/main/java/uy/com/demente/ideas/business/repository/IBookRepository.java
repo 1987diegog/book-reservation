@@ -35,6 +35,6 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 	 * @param publisher
 	 * @return
 	 */
-	@Query("SELECT b FROM Book WHERE b.genre =:genre AND b.publisher =:publisher")
+	@Query("SELECT b FROM Book b WHERE b.genre =:genre AND b.publisher =:publisher")
 	public List<Book> find(@Param("genre") String genre, @Param("publisher") Date publisher);
 }

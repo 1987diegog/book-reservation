@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import uy.com.demente.ideas.business.services.BookService;
 import uy.com.demente.ideas.model.Book;
 import uy.com.demente.ideas.view.resources.dto.BookDTO;
@@ -27,6 +31,7 @@ import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 @RestController
 // @RequestMapping -> Habilitamos que sea consumido por otras aplicaciones, programas
 @RequestMapping("/api/books")
+@Api(tags = "Book")
 public class BookResource {
 
 	private final BookService bookService;
@@ -36,6 +41,9 @@ public class BookResource {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "Crea un nuevo Book", notes = "Servicio para crear un nuevo book")
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Book creado correctamente"),
+			@ApiResponse(code = 400, message = "Solicitud invalida") })
 	public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
 
 		Book book = BOFactory.getBook(bookDTO);
@@ -44,6 +52,9 @@ public class BookResource {
 	}
 
 	@PutMapping("/{author}")
+	@ApiOperation(value = "Actualiza un Book", notes = "Servicio para actualizar un book")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Book actualizado correctamente"),
+			@ApiResponse(code = 404, message = "Book no encontrado") })
 	public ResponseEntity<BookDTO> update(@PathVariable("author") String author, BookDTO bookDTO) {
 
 		BookDTO response = null;
@@ -57,6 +68,9 @@ public class BookResource {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Elimina un Book", notes = "Servicio para eliminar un book")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Book eliminado correctamente"),
+			@ApiResponse(code = 404, message = "Book no encontrado") })
 	public ResponseEntity<String> remove(@PathVariable("id") Long id) {
 		Book book = bookService.findById(id);
 		if (book != null) {
@@ -68,6 +82,9 @@ public class BookResource {
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Listar Books", notes = "Servicio para listar todos los book")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Books encontrados"),
+			@ApiResponse(code = 404, message = "Books no encontrados") })
 	public ResponseEntity<List<BookDTO>> findAll() {
 		List<Book> listBooks = this.bookService.findAll();
 		List<BookDTO> listBooksDTO = DTOFactory.getListBooks(listBooks);
