@@ -20,19 +20,19 @@ public class DTOFactory {
 	///////////////////////// PERSONS ///////////////////////////
 	/////////////////////////////////////////////////////////////
 
-	public static List<PersonDTO> getListPersonDTO(List<Person> listPerson) {
+	public static List<PersonDTO> getListPerson(List<Person> listPerson) {
 
 		List<PersonDTO> listPersonDTO = null;
 		if (listPerson != null) {
 
-			listPersonDTO = listPerson.stream().map(DTOFactory::getPersonDTO)
+			listPersonDTO = listPerson.stream().map(DTOFactory::getPerson)
 					.collect(Collectors.toCollection(ArrayList::new));
 		}
 
 		return listPersonDTO;
 	}
 
-	public static PersonDTO getPersonDTO(Person person) {
+	public static PersonDTO getPerson(Person person) {
 
 		PersonDTO personDTO = null;
 		if (person != null) {
@@ -52,14 +52,13 @@ public class DTOFactory {
 		List<BookDTO> listBookDTO = null;
 		if (listBook != null) {
 
-			listBookDTO = listBook.stream().map(DTOFactory::getBookDTO)
-					.collect(Collectors.toCollection(ArrayList::new));
+			listBookDTO = listBook.stream().map(DTOFactory::getBook).collect(Collectors.toCollection(ArrayList::new));
 		}
 
 		return listBookDTO;
 	}
 
-	public static BookDTO getBookDTO(Book book) {
+	public static BookDTO getBook(Book book) {
 
 		BookDTO bookDTO = null;
 

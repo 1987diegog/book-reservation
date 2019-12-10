@@ -47,7 +47,7 @@ public class BookResource {
 	public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
 
 		Book book = BOFactory.getBook(bookDTO);
-		BookDTO response = DTOFactory.getBookDTO(bookService.create(book));
+		BookDTO response = DTOFactory.getBook(bookService.create(book));
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -60,7 +60,7 @@ public class BookResource {
 		BookDTO response = null;
 		if (bookService.findByAuthor(author) != null) {
 			Book book = BOFactory.getBook(bookDTO);
-			response = DTOFactory.getBookDTO(bookService.update(book));
+			response = DTOFactory.getBook(bookService.update(book));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

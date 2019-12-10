@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,6 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "DI_T_PERSON")
+@NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE p.email = ?1")
 public class Person implements Serializable {
 
 	private static final long serialVersionUID = 1L;
