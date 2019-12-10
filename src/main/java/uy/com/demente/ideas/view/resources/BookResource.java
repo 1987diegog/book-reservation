@@ -17,11 +17,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javassist.NotFoundException;
 import uy.com.demente.ideas.business.services.BookService;
-import uy.com.demente.ideas.model.Book;
 import uy.com.demente.ideas.view.resources.dto.BookDTO;
-import uy.com.demente.ideas.view.resources.factory.BOFactory;
-import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 
 /**
  * @author diego.gonzalezdurand
@@ -29,7 +27,7 @@ import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 // @RestController -> se indica que nuestra clase debera ser tratada como 
 // un servicio web.
 @RestController
-// @RequestMapping -> Habilitamos que sea consumido por otras aplicaciones, programas
+// @RequestMapping -> Habilitamos que sea consumido por otras aplicaciones
 @RequestMapping("/api/books")
 @Api(tags = "Book")
 public class BookResource {
@@ -46,24 +44,23 @@ public class BookResource {
 			@ApiResponse(code = 400, message = "Solicitud invalida") })
 	public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
 
-		Book book = BOFactory.getBook(bookDTO);
-		BookDTO response = DTOFactory.getBook(bookService.create(book));
+		System.out.println("Llegue: Crear Book");
+		BookDTO response = bookService.create(bookDTO);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{author}")
+	@PutMapping("/{title}")
 	@ApiOperation(value = "Actualiza un Book", notes = "Servicio para actualizar un book")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Book actualizado correctamente"),
 			@ApiResponse(code = 404, message = "Book no encontrado") })
-	public ResponseEntity<BookDTO> update(@PathVariable("author") String author, BookDTO bookDTO) {
+	public ResponseEntity<BookDTO> update(@PathVariable("title") String title, BookDTO bookDTO) {
 
-		BookDTO response = null;
-		if (bookService.findByAuthor(author) != null) {
-			Book book = BOFactory.getBook(bookDTO);
-			response = DTOFactory.getBook(bookService.update(book));
+		try {
+			System.out.println("Llegue: Update Book");
+			BookDTO response = bookService.update(title, bookDTO);
 			return new ResponseEntity<>(response, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -72,23 +69,24 @@ public class BookResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Book eliminado correctamente"),
 			@ApiResponse(code = 404, message = "Book no encontrado") })
 	public ResponseEntity<String> remove(@PathVariable("id") Long id) {
-		Book book = bookService.findById(id);
-		if (book != null) {
-			this.bookService.delete(book);
+
+		try {
+			System.out.println("Llegue: Remove Book");
+			this.bookService.delete(id);
 			return new ResponseEntity<>("Se borro el Book con id: \" + id", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>("No se encontro Book con id: " + id, HttpStatus.NOT_FOUND);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>("No se encontro el Book con id: " + id, HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@GetMapping
-	@ApiOperation(value = "Listar Books", notes = "Servicio para listar todos los book")
+	@ApiOperation(value = "Listar Books", notes = "Servicio para listar todos los books")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Books encontrados"),
 			@ApiResponse(code = 404, message = "Books no encontrados") })
 	public ResponseEntity<List<BookDTO>> findAll() {
-		System.out.println("Llegue findAll Books");
-		List<Book> listBooks = this.bookService.findAll();
-		List<BookDTO> listBooksDTO = DTOFactory.getListBooks(listBooks);
+
+		System.out.println("Llegue: listar Books");
+		List<BookDTO> listBooksDTO = this.bookService.findAll();
 		return ResponseEntity.ok(listBooksDTO);
 	}
 }

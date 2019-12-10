@@ -6,8 +6,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javassist.NotFoundException;
 import uy.com.demente.ideas.business.repository.IBookRepository;
 import uy.com.demente.ideas.model.Book;
+import uy.com.demente.ideas.view.resources.dto.BookDTO;
+import uy.com.demente.ideas.view.resources.factory.BOFactory;
+import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,53 +40,59 @@ public class BookService {
 	 */
 
 	/**
-	 * 
 	 * @param book
 	 * @return
 	 */
 	@Transactional
-	public Book create(Book book) {
-		return this.bookRepository.save(book);
+	public BookDTO create(BookDTO bookDTO) {
+		Book book = BOFactory.getBook(bookDTO);
+		return DTOFactory.getBook(this.bookRepository.save(book));
+	}
+
+	/**
+	 * 
+	 * @param title
+	 * @param book
+	 * @return
+	 * @throws NotFoundException
+	 */
+	@Transactional
+	public BookDTO update(String title, BookDTO bookDTO) throws NotFoundException {
+
+		if (bookRepository.findByTitle(title) != null) {
+			Book book = BOFactory.getBook(bookDTO);
+			return DTOFactory.getBook(bookRepository.save(book));
+		} else {
+			throw new NotFoundException("No se encuentra la booka");
+		}
 	}
 
 	/**
 	 * 
 	 * @param book
-	 * @return
+	 * @throws NotFoundException
 	 */
 	@Transactional
-	public Book update(Book book) {
-		return this.bookRepository.save(book);
-	}
-
-	/**
-	 * 
-	 * @param book
-	 */
-	@Transactional
-	public void delete(Book book) {
-		this.bookRepository.delete(book);
-	}
-
-	/**
-	 * 
-	 * @param author
-	 * @return
-	 */
-	public Book findByAuthor(String author) {
-		return this.bookRepository.findByAuthor(author);
-	}
-
-	/**
-	 * 
-	 * @param author
-	 * @return
-	 */
-	public Book findById(Long id) {
+	public void delete(Long id) throws NotFoundException {
 
 		Optional<Book> optional = this.bookRepository.findById(id);
 		if (optional.isPresent()) {
-			return optional.get();
+			this.bookRepository.delete(optional.get());
+		} else {
+			throw new NotFoundException("No se encuentra la booka");
+		}
+	}
+
+	/**
+	 * 
+	 * @param author
+	 * @return
+	 */
+	public BookDTO findById(Long id) {
+
+		Optional<Book> optional = this.bookRepository.findById(id);
+		if (optional.isPresent()) {
+			return DTOFactory.getBook(optional.get());
 		} else {
 			return null;
 		}
@@ -92,7 +102,7 @@ public class BookService {
 	 * 
 	 * @return
 	 */
-	public List<Book> findAll() {
-		return this.bookRepository.findAll();
+	public List<BookDTO> findAll() {
+		return DTOFactory.getListBooks(this.bookRepository.findAll());
 	}
 }

@@ -15,18 +15,18 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 	 * Query generada de forma dinamica utilizando Spring y el nombre reservado
 	 * findBy
 	 * 
-	 * @param title
+	 * @param author
 	 * @return
 	 */
-	public List<Book> findByTitle(String title);
+	public List<Book> findByAuthor(String author);
 
 	/**
 	 * Query generada con @NamedQuery
 	 * 
-	 * @param author
+	 * @param title
 	 * @return
 	 */
-	public Book findByAuthor(String author);
+	public Book findByTitle(String title);
 
 	/**
 	 * Ejemplo con Spring Data Query Methods

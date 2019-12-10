@@ -17,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javassist.NotFoundException;
 import uy.com.demente.ideas.business.services.PersonService;
 import uy.com.demente.ideas.view.resources.dto.PersonDTO;
 
@@ -42,6 +43,7 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Persona creada correctamente"),
 			@ApiResponse(code = 400, message = "Solicitud invalida") })
 	public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO personDTO) {
+		
 		System.out.println("Llegue: Crear Persona");
 		PersonDTO response = personService.create(personDTO);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -52,13 +54,13 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Persona actualizada correctamente"),
 			@ApiResponse(code = 404, message = "Persona no encontrada") })
 	public ResponseEntity<PersonDTO> update(@PathVariable("email") String email, PersonDTO personDTO) {
-		System.out.println("Llegue: Update Persona");
-		PersonDTO response = null;
-		if (personService.findByEmail(email) != null) {
-			response = personService.update(personDTO);
+
+		try {
+			System.out.println("Llegue: Update Persona");
+			PersonDTO response = personService.update(email, personDTO);
 			return new ResponseEntity<>(response, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -67,12 +69,12 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Persona eliminada correctamente"),
 			@ApiResponse(code = 404, message = "Persona no encontrada") })
 	public ResponseEntity<String> remove(@PathVariable("id") Long id) {
-		System.out.println("Llegue: Remove Persona");
-		PersonDTO personDTO = personService.findById(id);
-		if (personDTO != null) {
-			this.personService.delete(personDTO);
+
+		try {
+			System.out.println("Llegue: Remove Persona");
+			this.personService.delete(id);
 			return new ResponseEntity<>("Se borro la Persona con id: \" + id", HttpStatus.OK);
-		} else {
+		} catch (NotFoundException e) {
 			return new ResponseEntity<>("No se encontro la Persona con id: " + id, HttpStatus.NOT_FOUND);
 		}
 	}

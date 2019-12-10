@@ -19,7 +19,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "DI_T_BOOK")
-@NamedQuery(name = "Book.findByAuthor", query = "SELECT b FROM Book b WHERE b.author = ?1")
+@NamedQuery(name = "Book.findByTitle", query = "SELECT b FROM Book b WHERE b.title = ?1")
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 1L;
