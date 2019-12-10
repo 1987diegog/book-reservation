@@ -18,10 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import uy.com.demente.ideas.business.services.PersonService;
-import uy.com.demente.ideas.model.Person;
 import uy.com.demente.ideas.view.resources.dto.PersonDTO;
-import uy.com.demente.ideas.view.resources.factory.BOFactory;
-import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 
 /**
  * @author diego.gonzalezdurand
@@ -29,7 +26,7 @@ import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 // @RestController -> se indica que nuestra clase debera ser tratada como 
 // un servicio web.
 @RestController
-// @RequestMapping -> Habilitamos que sea consumido por otras aplicaciones, programas
+// @RequestMapping -> Habilitamos que sea consumido por otras aplicaciones
 @RequestMapping("/api/persons")
 @Api(tags = "Person")
 public class PersonResource {
@@ -45,9 +42,8 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Persona creada correctamente"),
 			@ApiResponse(code = 400, message = "Solicitud invalida") })
 	public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO personDTO) {
-
-		Person person = BOFactory.getPerson(personDTO);
-		PersonDTO response = DTOFactory.getPerson(personService.create(person));
+		System.out.println("Llegue: Crear Persona");
+		PersonDTO response = personService.create(personDTO);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -56,11 +52,10 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Persona actualizada correctamente"),
 			@ApiResponse(code = 404, message = "Persona no encontrada") })
 	public ResponseEntity<PersonDTO> update(@PathVariable("email") String email, PersonDTO personDTO) {
-
+		System.out.println("Llegue: Update Persona");
 		PersonDTO response = null;
 		if (personService.findByEmail(email) != null) {
-			Person person = BOFactory.getPerson(personDTO);
-			response = DTOFactory.getPerson(personService.update(person));
+			response = personService.update(personDTO);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -72,9 +67,10 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Persona eliminada correctamente"),
 			@ApiResponse(code = 404, message = "Persona no encontrada") })
 	public ResponseEntity<String> remove(@PathVariable("id") Long id) {
-		Person person = personService.findById(id);
-		if (person != null) {
-			this.personService.delete(person);
+		System.out.println("Llegue: Remove Persona");
+		PersonDTO personDTO = personService.findById(id);
+		if (personDTO != null) {
+			this.personService.delete(personDTO);
 			return new ResponseEntity<>("Se borro la Persona con id: \" + id", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("No se encontro la Persona con id: " + id, HttpStatus.NOT_FOUND);
@@ -86,8 +82,9 @@ public class PersonResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Personas encontradas"),
 			@ApiResponse(code = 404, message = "Personas no encontradas") })
 	public ResponseEntity<List<PersonDTO>> findAll() {
-		List<Person> listPersons = this.personService.findAll();
-		List<PersonDTO> listPersonsDTO = DTOFactory.getListPerson(listPersons);
+
+		System.out.println("Llegue: listar Personas");
+		List<PersonDTO> listPersonsDTO = this.personService.findAll();
 		return ResponseEntity.ok(listPersonsDTO);
 	}
 }

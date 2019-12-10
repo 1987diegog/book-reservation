@@ -86,6 +86,7 @@ public class BookResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Books encontrados"),
 			@ApiResponse(code = 404, message = "Books no encontrados") })
 	public ResponseEntity<List<BookDTO>> findAll() {
+		System.out.println("Llegue findAll Books");
 		List<Book> listBooks = this.bookService.findAll();
 		List<BookDTO> listBooksDTO = DTOFactory.getListBooks(listBooks);
 		return ResponseEntity.ok(listBooksDTO);

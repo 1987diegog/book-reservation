@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uy.com.demente.ideas.business.repository.IPersonRepository;
 import uy.com.demente.ideas.model.Person;
+import uy.com.demente.ideas.view.resources.dto.PersonDTO;
+import uy.com.demente.ideas.view.resources.factory.BOFactory;
+import uy.com.demente.ideas.view.resources.factory.DTOFactory;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,8 +44,10 @@ public class PersonService {
 	 * @return
 	 */
 	@Transactional
-	public Person create(Person person) {
-		return this.personRepository.save(person);
+	public PersonDTO create(PersonDTO personDTO) {
+		Person person = BOFactory.getPerson(personDTO);
+		PersonDTO response = DTOFactory.getPerson(this.personRepository.save(person));
+		return response;
 	}
 
 	/**
@@ -51,8 +56,10 @@ public class PersonService {
 	 * @return
 	 */
 	@Transactional
-	public Person update(Person person) {
-		return this.personRepository.save(person);
+	public PersonDTO update(PersonDTO personDTO) {
+		Person person = BOFactory.getPerson(personDTO);
+		PersonDTO response = DTOFactory.getPerson(personRepository.save(person));
+		return response;
 	}
 
 	/**
@@ -60,7 +67,8 @@ public class PersonService {
 	 * @param person
 	 */
 	@Transactional
-	public void delete(Person person) {
+	public void delete(PersonDTO personDTO) {
+		Person person = BOFactory.getPerson(personDTO);
 		this.personRepository.delete(person);
 	}
 
@@ -69,8 +77,10 @@ public class PersonService {
 	 * @param email
 	 * @return
 	 */
-	public Person findByEmail(String email) {
-		return this.personRepository.findByEmail(email);
+	public PersonDTO findByEmail(String email) {
+		PersonDTO response = DTOFactory.getPerson(this.personRepository.findByEmail(email));
+		return response;
+
 	}
 
 	/**
@@ -78,11 +88,11 @@ public class PersonService {
 	 * @param author
 	 * @return
 	 */
-	public Person findById(Long id) {
+	public PersonDTO findById(Long id) {
 
 		Optional<Person> optional = this.personRepository.findById(id);
 		if (optional.isPresent()) {
-			return optional.get();
+			return DTOFactory.getPerson(optional.get());
 		} else {
 			return null;
 		}
@@ -92,7 +102,7 @@ public class PersonService {
 	 * 
 	 * @return
 	 */
-	public List<Person> findAll() {
-		return this.personRepository.findAll();
+	public List<PersonDTO> findAll() {
+		return DTOFactory.getListPerson(this.personRepository.findAll());
 	}
 }
