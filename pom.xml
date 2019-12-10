@@ -25,53 +25,51 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
-		<!-- -///////////- -->
-		<!-- Base de Datos -->
-		<!-- -///////////- -->
-
+		<!-- ********************* -->
+		<!-- *** Base de datos *** -->
+		<!-- ********************* -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.193</version>
 			<scope>runtime</scope>
 		</dependency>
-
-
-		<!-- -////- -->
-		<!-- Swagger -->
-		<!-- -////- -->
+		<!-- *************** -->
+		<!-- *** Swagger *** -->
+		<!-- *************** -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
-		<!-- -///- -->
-		<!-- Utils -->
-		<!-- -///- -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework</groupId> -->
-<!-- 			<artifactId>spring-beans</artifactId> -->
-<!-- 			<version>5.2.1.RELEASE</version> -->
-<!-- 		</dependency> -->
+		<!-- ***************** -->
+		<!-- *** Seguridad *** -->
+		<!-- ***************** -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- ************* -->
+		<!-- *** Utils *** -->
+		<!-- ************* -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>5.2.1.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,9 +82,10 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 	</dependencies>
-
+	<!-- ************* -->
+	<!-- *** Build *** -->
+	<!-- ************* -->
 	<build>
 		<plugins>
 			<plugin>
